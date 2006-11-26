@@ -1,3 +1,29 @@
+Compiling / installing:
+-----------------------
+
+You need:
+ * Scons
+ * Maya 					(Tested with 8.0)
+ * Visual Studio	(Tested with 2005)
+
+To use this plugin you need to compile and install it. Under windows you it 
+should be enough to just change the 'MayaPath' variable to in the file 
+'SConstruct' to point to your maya installation directory. If you are compiling 
+on other platforms, you need to also change the compiler options.
+
+Running 'scons install' should compile and copy the plugin and its MEL script
+to correct directories. Then you can load the plugin from plugin manager in 
+maya.
+
+
+
+
+
+
+
+
+
+
 ===============================================================================
 
 Thanks to the following people for M2 file format code:
