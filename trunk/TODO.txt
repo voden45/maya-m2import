@@ -1,4 +1,4 @@
 TODO:
 
-	* Texture/material import
+	* Flip UVs in the plugin (polyFlipUV in MEL, what's it in the API?)
 	* Animation import

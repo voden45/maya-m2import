@@ -107,6 +107,8 @@ struct M2View
 	int32	 lod;
 };
 
+// Piece of a mesh (meshes are cut to pieces 
+// that have single material on them)
 struct M2Geoset 
 {
 	uint16 id;
@@ -122,14 +124,13 @@ struct M2Geoset
 	float v[3];
 };
 
-struct M2TempMesh
-{	
-	unsigned int nOriginalVertices;
-	M2Vertex* originalVertices;
-	
-	unsigned int nIndices;
-	uint16* indices;
+// Texture info
+struct M2Texture
+{
+	uint32 type;
+	uint32 flags;
+	uint32 nameLen;
+	uint32 offsetName;
 };
-
 
 #endif

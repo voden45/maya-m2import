@@ -10,27 +10,27 @@ using namespace std;
 
 MStatus initializePlugin(MObject obj)
 {
-  MGlobal::startErrorLogging();
+	MGlobal::startErrorLogging();
 
-  MFnPlugin plugin(obj, "Esa Nuuros", "1.0", "Any");
+	MFnPlugin plugin(obj, "Esa Nuuros", "1.0", "Any");
 
-  return plugin.registerFileTranslator("M2", "none", Plugin::creator, "m2FileTranslatorOpts", 0, false);
+	return plugin.registerFileTranslator("M2", "none", Plugin::creator, "m2FileTranslatorOpts", 0, false);
 }
 
 MStatus uninitializePlugin(MObject obj)
 {
-  MFnPlugin plugin(obj);
+	MFnPlugin plugin(obj);
 
-  MStatus ret = plugin.deregisterFileTranslator("M2");
+	MStatus ret = plugin.deregisterFileTranslator("M2");
 
-  MGlobal::stopErrorLogging();
+	MGlobal::stopErrorLogging();
 
-  return ret;
+	return ret;
 }
 
 Plugin::Plugin():
-	m_verbose(true),
-	m_importBones(false)
+m_verbose(true),
+m_importBones(false)
 {
 }
 
@@ -40,98 +40,98 @@ Plugin::~Plugin()
 
 void *Plugin::creator()
 {
-  return new Plugin();
+	return new Plugin();
 }
 
 MStatus Plugin::reader(const MFileObject &file, const MString &optionsString, FileAccessMode mode)
 {	
-  parseOptions(optionsString);
- 	
-  const char *fname = file.fullName().asChar();
+	parseOptions(optionsString);
 
-  cout << "Importing .m2 from " << fname << " ..." << endl;
-  std::ifstream inputFile(fname, ios::in | ios::binary);
-  if(inputFile.fail())
-  {
-    cerr << "Error: the file " << fname << " could not be opened for reading." << endl;
-    return MS::kFailure;
-  }
-  
-  // Read the entire file into memory
-  inputFile.seekg(0, ios::end);
-  
-  unsigned int fileSize = inputFile.tellg();
-  inputFile.seekg(0, ios::beg);
-  m_file = new char [fileSize];
+	const char *fname = file.fullName().asChar();
+
+	cout << "Importing .m2 from " << fname << " ..." << endl;
+	std::ifstream inputFile(fname, ios::in | ios::binary);
+	if(inputFile.fail())
+	{
+		cerr << "Error: the file " << fname << " could not be opened for reading." << endl;
+		return MS::kFailure;
+	}
+
+	// Read the entire file into memory
+	inputFile.seekg(0, ios::end);
+
+	unsigned int fileSize = inputFile.tellg();
+	inputFile.seekg(0, ios::beg);
+	m_file = new char [fileSize];
 	inputFile.read(m_file, fileSize);
-	
-  inputFile.close();
 
-  try
-  {
-    if( (mode == MPxFileTranslator::kImportAccessMode) ||
-        (mode == MPxFileTranslator::kSaveAccessMode))
-    {
-      importAll();
-    }   
-  }
-  catch(ImportException e)
-  {
-    cerr << "Exception: " << endl << e.getMessage() << endl;
-    return MS::kFailure;
-  }
+	inputFile.close();
 
-  return MS::kSuccess;
+	try
+	{
+		if( (mode == MPxFileTranslator::kImportAccessMode) ||
+			(mode == MPxFileTranslator::kSaveAccessMode))
+		{
+			importAll();
+		}   
+	}
+	catch(ImportException e)
+	{
+		cerr << "Exception: " << endl << e.getMessage() << endl;
+		return MS::kFailure;
+	}
+
+	return MS::kSuccess;
 }
 
 MStatus Plugin::writer(const MFileObject &file, const MString &optionsString, FileAccessMode mode)
 {
-  cerr << "Plugin::writer isn't implemented." << endl;
-  
-  return MS::kFailure;
+	cerr << "Plugin::writer isn't implemented." << endl;
+
+	return MS::kFailure;
 }
 
 bool Plugin::haveReadMethod() const
 {
-  return true;
+	return true;
 }
 
 bool Plugin::haveWriteMethod() const
 {
-  return false;
+	return false;
 }
 
 MString Plugin::defaultExtension() const
 {
-  return "m2";
+	return "m2";
 }
 
 MPxFileTranslator::MFileKind Plugin::identifyFile(const MFileObject &filename, const char *buffer, short size) const
 {
-  const char *name = filename.name().asChar();
-  size_t nameLength = strlen(name);
+	const char *name = filename.name().asChar();
+	size_t nameLength = strlen(name);
 
-  if((nameLength > 3) && (!strcasecmp(name + nameLength - 3, ".m2")))
-    return kCouldBeMyFileType;
-  else 
-  	return kNotMyFileType;;
+	if((nameLength > 3) && (!strcasecmp(name + nameLength - 3, ".m2")))
+		return kCouldBeMyFileType;
+	else 
+		return kNotMyFileType;;
 }
 
 void Plugin::parseOptions(const MString& options)
 {
-  if(options.length() < 1) return;
+	if(options.length() < 1) return;
 
-  MStringArray optionList;
-  options.split(';', optionList);
+	MStringArray optionList;
+	options.split(';', optionList);
 
-  for(unsigned int i = 0; i < optionList.length(); i++)
-  {
-    MStringArray option;
-    optionList[i].split('=', option);
+	for(unsigned int i = 0; i < optionList.length(); i++)
+	{
+		MStringArray option;
+		optionList[i].split('=', option);
 
-    if(option.length() < 1) continue;
+		if(option.length() < 1) continue;
 
-    if(			option[0] == "verbose") m_verbose = (option[1] == "1" ? true : false);
+		if(			option[0] == "verbose") m_verbose = (option[1] == "1" ? true : false);
 		else if(option[0] == "bones") m_importBones = (option[1] == "1" ? true : false);    	
-  }		
+	}		
 }
