@@ -15,14 +15,11 @@ Running 'scons install' should compile and copy the plugin and its MEL script
 to correct directories. Then you can load the plugin from plugin manager in 
 maya.
 
+Usage Notes:
+------------
 
-
-
-
-
-
-
-
+If you want textures to appear correctly, you need to flip them vertically (local 
+axis).
 
 ===============================================================================
 

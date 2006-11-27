@@ -5,19 +5,19 @@
 
 class ImportException
 {
-  private:
-    std::string msg;
+private:
+	std::string msg;
 
-  public:
-    ImportException(const std::string& message)
-    {
-      msg = message;
-    }
+public:
+	ImportException(const std::string& message)
+	{
+		msg = message;
+	}
 
-    const std::string& getMessage() const
-    {
-      return msg;
-    }
+	const std::string& getMessage() const
+	{
+		return msg;
+	}
 };
 
 #endif
