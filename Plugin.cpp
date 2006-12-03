@@ -108,13 +108,20 @@ MString Plugin::defaultExtension() const
 
 MPxFileTranslator::MFileKind Plugin::identifyFile(const MFileObject &filename, const char *buffer, short size) const
 {
-	const char *name = filename.name().asChar();
-	size_t nameLength = strlen(name);
+	const char *fname = filename.name().asChar();
+	char magic[4];
 
-	if((nameLength > 3) && (!strcasecmp(name + nameLength - 3, ".m2")))
+	std::ifstream inputFile(fname, ios::in | ios::binary);
+	if(inputFile.fail()) 
+		return kNotMyFileType;
+
+	inputFile.read(magic, 4);
+	inputFile.close();
+
+	if(magic[0] == 'M' && magic[1] == 'D' && magic[2] == '2' && magic[3] == '0')
 		return kCouldBeMyFileType;
 	else 
-		return kNotMyFileType;;
+		return kNotMyFileType;
 }
 
 void Plugin::parseOptions(const MString& options)
@@ -131,7 +138,7 @@ void Plugin::parseOptions(const MString& options)
 
 		if(option.length() < 1) continue;
 
-		if(			option[0] == "verbose") m_verbose = (option[1] == "1" ? true : false);
-		else if(option[0] == "bones") m_importBones = (option[1] == "1" ? true : false);    	
+		if(option[0]		== "verbose") m_verbose = (option[1] == "1" ? true : false);
+		else if(option[0]	== "bones") m_importBones = (option[1] == "1" ? true : false);    	
 	}		
 }
