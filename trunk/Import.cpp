@@ -91,7 +91,6 @@ void Plugin::importAll()
 	}
 
 	// Read textures
-/*
 	if(header.nTextures)
 	{
 		M2Texture* m2Textures = (M2Texture*)(m_file + header.offsetTextures);
@@ -114,7 +113,19 @@ void Plugin::importAll()
 			}
 		}
 	}
-*/
+
+	// Read bones
+	if(header.nBones) {
+		M2Bone * bone = (M2Bone *)(m_file + header.offsetBones);
+
+		for(uint32 i = 0; i < header.nBones; i++) {
+			if(m_verbose) {
+				cout << "Bone #" << i << ":" << endl;
+				cout << "\tIndex: " << bone[i].index << endl;
+				cout << "\tPivot: " << bone[i].pivot[0] << " " << bone[i].pivot[1] << " " << bone[i].pivot[2] << endl;
+			}
+		}
+	}
 
 	// Send the data to Maya
 	sendDataToMaya(tmpMesh, view);
@@ -124,7 +135,7 @@ void Plugin::sendDataToMaya(const DEMesh& mesh, const M2View* view)
 {
 	for(int iGeoset = 0; iGeoset < view->nSub; iGeoset++)
 	{
-		M2Geoset* geoset = (M2Geoset*)(m_file + view->offsetSub + iGeoset * sizeof(M2Geoset));
+		M2SubMesh * geoset = (M2SubMesh*)(m_file + view->offsetSub + iGeoset * sizeof(M2SubMesh));
 
 		// Only grab the vertices belonging to this geoset	
 		MFloatPointArray vertexArray;

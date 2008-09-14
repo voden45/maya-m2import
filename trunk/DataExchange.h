@@ -1,5 +1,5 @@
-#ifndef DATAEXCHANGE_H
-#define DATAEXCHANGE_H
+#ifndef DATA_EXCHANGE_H
+#define DATA_EXCHANGE_H
 
 #include "M2.h"
 
@@ -14,6 +14,9 @@ struct DETexture
 
 struct DEMesh
 {	
+	DEMesh() : originalVertices(0), indices(0) {}
+	~DEMesh() { delete[] originalVertices; delete[] indices; }
+
 	unsigned int nOriginalVertices;
 	M2Vertex* originalVertices;
 
