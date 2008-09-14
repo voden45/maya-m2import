@@ -4,17 +4,19 @@ import os
 env = Environment()
 
 # Change this to point where your Maya is installed
-
-MayaPath = 'C:\Program Files\Alias\Maya8.0'
+MayaPath = 'D:\Apps\Maya 2008'
 #MayaPath = '/usr/aw/maya'
+
+# Path to Platform SDK
+PlatformSDKPath = 'C:\Program Files\Microsoft Platform SDK for Windows Server 2003 R2'
 
 # Compiler parameters
 env.Append(CCFLAGS = '-D_WIN32 -D_BOOL /EHsc -DNT_PLUGIN -D_CRT_SECURE_NO_DEPRECATE')
-env.Append(CPPPATH = MayaPath + '/include')
+env.Append(CPPPATH = [MayaPath + '/include', PlatformSDKPath + '/include'])
 env.Append(LINKFLAGS = '/export:initializePlugin /export:uninitializePlugin')
 
 # Linker parameters
-env.Append(LIBPATH = MayaPath + '/lib')
+env.Append(LIBPATH = [MayaPath + '/lib', PlatformSDKPath + '/lib'])
 env['LIBS'] = Split('OpenMaya Foundation')
 
 # Targets
